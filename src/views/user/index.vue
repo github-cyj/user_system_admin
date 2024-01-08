@@ -25,6 +25,7 @@
       <el-table-column label="头像" align="center" width="100">
         <template slot-scope="{row}">
           <img v-if="row.avatar" :src="getAvatarUrl(row.avatar)" width="50" height="50">
+          <i v-else class="el-icon-user" style="font-size: 50px;" />
         </template>
       </el-table-column>
       <el-table-column label="用户名">
