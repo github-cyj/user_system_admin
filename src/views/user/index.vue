@@ -17,20 +17,29 @@
       highlight-current-row
       style="width: 100%;"
     >
-      <el-table-column label="ID" prop="id" align="center">
+      <el-table-column label="ID" prop="id" align="center" width="80">
         <template slot-scope="{row}">
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column label="头像" align="center" width="100">
+        <template slot-scope="{row}">
+          <img v-if="row.avatar" :src="getAvatarUrl(row.avatar)" width="50" height="50">
+        </template>
+      </el-table-column>
       <el-table-column label="用户名">
         <template slot-scope="{row}">
           <span>{{ row.username }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建日期" align="center">
+      <el-table-column label="创建时间" align="center">
         <template slot-scope="{row}">
           <span>{{ row.create_time }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="修改" align="center">
+        <template slot-scope="{row}">
+          <span>{{ row.update_time }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" width="230" class-name="small-padding fixed-width">
@@ -62,6 +71,22 @@
         label-width="70px"
         style="width: 400px; margin-left:50px;"
       >
+        <el-form-item label="头像" prop="avatar">
+          <el-upload
+            class="avatar-uploader"
+            :action="avatarUploadUrl"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess"
+            :before-upload="beforeAvatarUpload"
+            :multiple="false"
+            name="files"
+          >
+            <div v-if="userInfo.avatar">
+              <img :src="getAvatarUrl(userInfo.avatar)" class="avatar">
+            </div>
+            <i v-else class="el-icon-plus avatar-uploader-icon" />
+          </el-upload>
+        </el-form-item>
         <el-form-item label="用户名" prop="username">
           <el-input v-model="userInfo.username" />
         </el-form-item>
@@ -77,6 +102,35 @@
     </el-dialog>
   </div>
 </template>
+
+<style lang="scss">
+.avatar-uploader .el-upload {
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.avatar-uploader .el-upload:hover {
+  border-color: #409EFF;
+}
+
+.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 100px;
+  height: 100px;
+  line-height: 100px;
+  text-align: center;
+}
+
+.avatar {
+  width: 100px;
+  height: 100px;
+  display: block;
+}
+</style>
 
 <script>
 import { getUserList, getUserInfo, updateUser, createUser, deleteUser } from '@/api/user'
@@ -99,6 +153,7 @@ export default {
   },
   data() {
     return {
+      avatarUploadUrl: process.env.VUE_APP_BASE_API + '/api/file/upload_single',
       tableKey: 'UserTable',
       list: null,
       total: 0,
@@ -109,6 +164,7 @@ export default {
       },
       userInfo: {
         id: undefined,
+        avatar: '',
         username: ''
       },
       dialogFormVisible: false,
@@ -141,9 +197,14 @@ export default {
     resetUserInfo() {
       this.userInfo = {
         id: undefined,
+        avatar: '',
         username: ''
       }
     },
+    getAvatarUrl(avatarUrl) {
+      return process.env.VUE_APP_BASE_API + '/' + avatarUrl
+    },
+
     handleCreate() {
       this.resetUserInfo()
       this.dialogStatus = 'create'
@@ -240,6 +301,30 @@ export default {
           })
         }
       })
+    },
+    handleAvatarSuccess(res, file) {
+      if (res.code === 200) {
+        this.userInfo.avatar = res.data
+      } else {
+        this.$notify({
+          title: '图片上传错误错误',
+          message: res.msg,
+          type: 'error',
+          duration: 2000
+        })
+      }
+    },
+    beforeAvatarUpload(file) {
+      const isImage = file.type.startsWith('image/')
+      const isLt5M = file.size / 1024 / 1024 < 5
+
+      if (!isImage) {
+        this.$message.error('上传头像非图片格式')
+      }
+      if (!isLt5M) {
+        this.$message.error('上传头像图片大小不能超过 5MB!')
+      }
+      return isImage && isLt5M
     }
 
   }

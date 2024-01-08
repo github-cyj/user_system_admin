@@ -44,6 +44,11 @@ module.exports = {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
     name: name,
+    performance: {
+      // 打包文件大小配置
+      maxEntrypointSize: 50000000,
+      maxAssetSize: 30000000
+    },
     resolve: {
       alias: {
         '@': resolve('src')
