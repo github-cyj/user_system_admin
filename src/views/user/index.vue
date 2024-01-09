@@ -188,10 +188,7 @@ export default {
       getUserList(this.listQuery).then(response => {
         this.list = response.data.data
         this.total = response.data.total
-
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       })
     },
 
