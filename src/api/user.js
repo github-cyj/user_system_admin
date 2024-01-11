@@ -37,3 +37,11 @@ export function deleteUser(id) {
     method: 'delete'
   })
 }
+
+export function updatePassword(id, data) {
+  return request({
+    url: '/api/user/' + id + '/password',
+    method: 'put',
+    data: data
+  })
+}
