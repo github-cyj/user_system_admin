@@ -7,7 +7,7 @@
     "dev": "vue-cli-service serve",
     "prod": "vue-cli-service serve --mode production",
     "lint": "eslint --ext .js,.vue src",
-    "build:prod": "vue-cli-service build",
+    "build:prod": "vue-cli-service build && serve -s dist -p 10910",
     "build:stage": "vue-cli-service build --mode staging",
     "preview": "node build/index.js --preview",
     "new": "plop",
