@@ -6,9 +6,11 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "prod": "vue-cli-service serve --mode production",
+    "userSystemLocal": "vue-cli-service serve --mode userSystemLocal",
     "lint": "eslint --ext .js,.vue src",
     "build:prod": "vue-cli-service build && serve -s dist -p 10910",
     "build:stage": "vue-cli-service build --mode staging",
+    "build:userSystemLocal": "vue-cli-service build --mode userSystemLocal && serve -s dist -p 10910",
     "preview": "node build/index.js --preview",
     "new": "plop",
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml",
